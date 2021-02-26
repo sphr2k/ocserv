@@ -154,7 +154,7 @@ struct http_req_st {
 	unsigned int message_complete;
 	unsigned link_mtu;
 	unsigned tunnel_mtu;
-	
+
 	unsigned no_ipv4;
 	unsigned no_ipv6;
 
@@ -199,7 +199,7 @@ typedef struct worker_st {
 	int cmd_fd;
 	int conn_fd;
 	sock_type_t conn_type; /* AF_UNIX or something else */
-	
+
 	http_parser *parser;
 
 	struct list_head *vconfig;
@@ -267,7 +267,7 @@ typedef struct worker_st {
 
 	unsigned dtls_crypto_overhead; /* estimated overhead of DTLS ciphersuite + DTLS CSTP HEADER */
 	unsigned dtls_proto_overhead; /* UDP + IP header size */
-	
+
 	/* Indicates whether the new IPv6 headers will
 	 * be sent or the old */
 	unsigned full_ipv6;
@@ -309,7 +309,7 @@ typedef struct worker_st {
 	/* information on the tun device addresses and network */
 	struct vpn_st vinfo;
 	unsigned default_route;
-	
+
 	void *main_pool; /* to be used only on deinitialization */
 
 #if defined(CAPTURE_LATENCY_SUPPORT)
@@ -340,9 +340,12 @@ int get_ca_der_handler(worker_st * ws, unsigned http_ver);
 
 int response_404(worker_st *ws, unsigned http_ver);
 int get_empty_handler(worker_st *server, unsigned http_ver);
-#ifdef ANYCONNECT_CLIENT_COMPAT
+
+int get_saml_metadata_handler(worker_st *server, unsigned http_ver);
+int post_acs_handler(worker_st *server, unsigned http_ver);
+int saml_get_handler(worker_st *server, unsigned http_ver);
+int saml_post_handler(worker_st *server, unsigned http_ver);
 int get_config_handler(worker_st *ws, unsigned http_ver);
-#endif
 int get_string_handler(worker_st *ws, unsigned http_ver);
 int get_dl_handler(worker_st *ws, unsigned http_ver);
 int get_cert_names(worker_st * ws, const gnutls_datum_t * raw);
@@ -411,7 +414,7 @@ int send_msg_to_secmod(worker_st * ws, int sd, uint8_t cmd,
 }
 
 inline static
-int send_msg_to_main(worker_st *ws, uint8_t cmd, 
+int send_msg_to_main(worker_st *ws, uint8_t cmd,
 	    const void* msg, pack_size_func get_size, pack_func pack)
 {
 	oclog(ws, LOG_DEBUG, "sending message '%s' to main", cmd_request_to_str(cmd));
@@ -422,7 +425,7 @@ int parse_proxy_proto_header(struct worker_st *ws, int fd);
 
 void cookie_authenticate_or_exit(worker_st *ws);
 
-/* after that time (secs) of inactivity in the UDP part, connection switches to 
+/* after that time (secs) of inactivity in the UDP part, connection switches to
  * TCP (if activity occurs there).
  */
 #define UDP_SWITCH_TIME 15

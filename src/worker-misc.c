@@ -44,12 +44,16 @@
 #include <tlslib.h>
 
 #ifdef HAVE_SIGALTSTACK
-# include <signal.h>
-# include <sys/mman.h>
+#include <signal.h>
+#include <sys/mman.h>
 #endif
 
 /* recv from the new file descriptor and make sure we have a valid packet */
+<<<<<<< HEAD
 static unsigned recv_from_new_fd(struct worker_st * ws, struct dtls_st *dtls, int fd, UdpFdMsg **tmsg)
+=======
+static unsigned recv_from_new_fd(struct worker_st *ws, int fd, UdpFdMsg ** tmsg)
+>>>>>>> Add SAML2 auth support, indent, update documentation
 {
 	int saved_fd, ret;
 	UdpFdMsg *saved_tmsg;
@@ -73,10 +77,17 @@ static unsigned recv_from_new_fd(struct worker_st * ws, struct dtls_st *dtls, in
 
 	ret = 0;
  revert:
+<<<<<<< HEAD
  	*tmsg = dtls->dtls_tptr.msg;
  	dtls->dtls_tptr.fd = saved_fd;
  	dtls->dtls_tptr.msg = saved_tmsg;
  	return ret;
+=======
+	*tmsg = ws->dtls_tptr.msg;
+	ws->dtls_tptr.fd = saved_fd;
+	ws->dtls_tptr.msg = saved_tmsg;
+	return ret;
+>>>>>>> Add SAML2 auth support, indent, update documentation
 }
 
 int handle_commands_from_main(struct worker_st *ws)
@@ -86,12 +97,18 @@ int handle_commands_from_main(struct worker_st *ws)
 	UdpFdMsg *tmsg = NULL;
 	int ret;
 	int fd = -1;
+<<<<<<< HEAD
 	struct dtls_st * dtls = NULL;
 	/*int cmd_data_len;*/
+=======
+	/*int cmd_data_len; */
+>>>>>>> Add SAML2 auth support, indent, update documentation
 
 	memset(&ws->buffer, 0, sizeof(ws->buffer));
 
-	ret = recv_msg_data(ws->cmd_fd, &cmd, ws->buffer, sizeof(ws->buffer), &fd);
+	ret =
+	    recv_msg_data(ws->cmd_fd, &cmd, ws->buffer, sizeof(ws->buffer),
+			  &fd);
 	if (ret < 0) {
 		oclog(ws, LOG_DEBUG, "cannot obtain data from command socket");
 		exit_worker_reason(ws, REASON_SERVER_DISCONNECT);
@@ -104,18 +121,25 @@ int handle_commands_from_main(struct worker_st *ws)
 
 	length = ret;
 
-	oclog(ws, LOG_DEBUG, "worker received message %s of %u bytes\n", cmd_request_to_str(cmd), (unsigned)length);
+	oclog(ws, LOG_DEBUG, "worker received message %s of %u bytes\n",
+	      cmd_request_to_str(cmd), (unsigned)length);
 
-	/*cmd_data_len = ret - 1;*/
+	/*cmd_data_len = ret - 1; */
 
-	switch(cmd) {
-		case CMD_TERMINATE:
-			exit_worker_reason(ws, REASON_SERVER_DISCONNECT);
-		case CMD_UDP_FD: {
+	switch (cmd) {
+	case CMD_TERMINATE:
+		exit_worker_reason(ws, REASON_SERVER_DISCONNECT);
+	case CMD_UDP_FD:{
 			unsigned has_hello = 1;
 
+<<<<<<< HEAD
 			if (DTLS_ACTIVE(ws)->udp_state != UP_WAIT_FD) {
 				oclog(ws, LOG_DEBUG, "received another a UDP fd!");
+=======
+			if (ws->udp_state != UP_WAIT_FD) {
+				oclog(ws, LOG_DEBUG,
+				      "received another a UDP fd!");
+>>>>>>> Add SAML2 auth support, indent, update documentation
 			}
 
 			tmsg = udp_fd_msg__unpack(NULL, length, ws->buffer);
@@ -124,6 +148,7 @@ int handle_commands_from_main(struct worker_st *ws)
 			}
 
 			if (fd == -1) {
+<<<<<<< HEAD
 				oclog(ws, LOG_ERR, "received UDP fd message of wrong type");
 
 				if (tmsg)
@@ -132,19 +157,32 @@ int handle_commands_from_main(struct worker_st *ws)
 				if (DTLS_ACTIVE(ws)->udp_state == UP_WAIT_FD)
 					DTLS_ACTIVE(ws)->udp_state = UP_DISABLED;
 				return -1;
+=======
+				oclog(ws, LOG_ERR,
+				      "received UDP fd message of wrong type");
+				goto udp_fd_fail;
+>>>>>>> Add SAML2 auth support, indent, update documentation
 			}
 
 			set_non_block(fd);
 			if (has_hello == 0) {
 				/* check if the first packet received is a valid one -
 				 * if not discard the new fd */
+<<<<<<< HEAD
 				if (!recv_from_new_fd(ws, DTLS_ACTIVE(ws), fd, &tmsg)) {
 					oclog(ws, LOG_INFO, "received UDP fd message but its session has invalid data!");
+=======
+				if (!recv_from_new_fd(ws, fd, &tmsg)) {
+					oclog(ws, LOG_INFO,
+					      "received UDP fd message but its session has invalid data!");
+>>>>>>> Add SAML2 auth support, indent, update documentation
 					if (tmsg)
-						udp_fd_msg__free_unpacked(tmsg, NULL);
+						udp_fd_msg__free_unpacked(tmsg,
+									  NULL);
 					close(fd);
 					return 0;
 				}
+<<<<<<< HEAD
 				dtls = DTLS_ACTIVE(ws);
 			} else { /* received client hello */
 				dtls = DTLS_INACTIVE(ws);
@@ -156,6 +194,17 @@ int handle_commands_from_main(struct worker_st *ws)
 				close(dtls->dtls_tptr.fd);
 			if (dtls->dtls_tptr.msg != NULL)
 				udp_fd_msg__free_unpacked(dtls->dtls_tptr.msg, NULL);
+=======
+			} else {	/* received client hello */
+				ws->udp_state = UP_SETUP;
+			}
+
+			if (ws->dtls_tptr.fd != -1)
+				close(ws->dtls_tptr.fd);
+			if (ws->dtls_tptr.msg != NULL)
+				udp_fd_msg__free_unpacked(ws->dtls_tptr.msg,
+							  NULL);
+>>>>>>> Add SAML2 auth support, indent, update documentation
 
 			dtls->dtls_tptr.msg = tmsg;
 			dtls->dtls_tptr.fd = fd;
@@ -163,20 +212,31 @@ int handle_commands_from_main(struct worker_st *ws)
 			if (WSCONFIG(ws)->try_mtu == 0)
 				set_mtu_disc(fd, ws->proto, 0);
 
-			oclog(ws, LOG_DEBUG, "received new UDP fd and connected to peer");
+			oclog(ws, LOG_DEBUG,
+			      "received new UDP fd and connected to peer");
 			ws->udp_recv_time = time(0);
 
 			return 0;
 
-			}
-			break;
-		default:
-			oclog(ws, LOG_ERR, "unknown CMD 0x%x", (unsigned)cmd);
-			exit_worker_reason(ws, REASON_ERROR);
+		}
+		break;
+	default:
+		oclog(ws, LOG_ERR, "unknown CMD 0x%x", (unsigned)cmd);
+		exit_worker_reason(ws, REASON_ERROR);
 	}
 
 	return 0;
 
+<<<<<<< HEAD
+=======
+ udp_fd_fail:
+	if (tmsg)
+		udp_fd_msg__free_unpacked(tmsg, NULL);
+	if (ws->dtls_tptr.fd == -1)
+		ws->udp_state = UP_DISABLED;
+
+	return -1;
+>>>>>>> Add SAML2 auth support, indent, update documentation
 }
 
 /* Completes the VPN device information.
@@ -224,12 +284,16 @@ void ocsigaltstack(struct worker_st *ws)
 	int e;
 
 	/* setup the stack for signal handlers */
+<<<<<<< HEAD
 	if (posix_memalign((void**)&ss.ss_sp, getpagesize(), SIGSTKSZ) != 0) {
+=======
+	if (posix_memalign((void **)&ss.ss_sp, getpagesize(), SIGSTKSZ) < 0) {
+>>>>>>> Add SAML2 auth support, indent, update documentation
 		oclog(ws, LOG_ERR,
 		      "could not allocate memory for signal stack");
 		exit(1);
 	}
-	if (mprotect(ss.ss_sp, SIGSTKSZ, PROT_READ|PROT_WRITE) == -1) {
+	if (mprotect(ss.ss_sp, SIGSTKSZ, PROT_READ | PROT_WRITE) == -1) {
 		e = errno;
 		oclog(ws, LOG_ERR, "mprotect: %s\n", strerror(e));
 		exit(1);

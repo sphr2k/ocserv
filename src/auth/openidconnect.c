@@ -51,10 +51,14 @@ typedef struct oidc_ctx_st {
 	int token_verified;
 } oidc_ctx_st;
 
+<<<<<<< HEAD
 static bool oidc_fetch_oidc_keys(oidc_vctx_st * vctx);
+=======
+static bool oidc_fetch_oidc_keys(void *pool, oidc_vctx_st * vctx);
+>>>>>>> Add SAML2 auth support, indent, update documentation
 static bool oidc_verify_token(oidc_vctx_st * vctx, const char *token,
-				size_t token_length,
-				char user_name[MAX_USERNAME_SIZE]);
+			      size_t token_length,
+			      char user_name[MAX_USERNAME_SIZE]);
 
 static void oidc_vhost_init(void **vctx, void *pool, void *additional)
 {
@@ -78,7 +82,8 @@ static void oidc_vhost_init(void **vctx, void *pool, void *additional)
 
 	vc->config = json_load_file(config, 0, &err);
 	if (vc->config == NULL) {
-		syslog(LOG_ERR, "ocserv-oidc: failed to load config file: %s\n", config);
+		syslog(LOG_ERR, "ocserv-oidc: failed to load config file: %s\n",
+		       config);
 		exit(1);
 	}
 
@@ -136,7 +141,7 @@ static void oidc_vhost_deinit(void *ctx)
 }
 
 static int oidc_auth_init(void **ctx, void *pool, void *vctx,
-			    const common_auth_init_st * info)
+			  const common_auth_init_st * info)
 {
 	oidc_vctx_st *vt = (oidc_vctx_st *) vctx;
 	oidc_ctx_st *ct;
@@ -147,7 +152,9 @@ static int oidc_auth_init(void **ctx, void *pool, void *vctx,
 	ct->vctx_st = vt;
 	*ctx = (void *)ct;
 
-	if (oidc_verify_token(ct->vctx_st, info->username, strlen(info->username), ct->username)) {
+	if (oidc_verify_token
+	    (ct->vctx_st, info->username, strlen(info->username),
+	     ct->username)) {
 		ct->token_verified = 1;
 		return 0;
 	} else {
@@ -208,7 +215,7 @@ typedef struct oidc_json_parser_context {
 
 // Callback from CURL for each block as it is downloaded
 static size_t oidc_json_parser_context_callback(char *ptr, size_t size,
-						  size_t nmemb, void *userdata)
+						size_t nmemb, void *userdata)
 {
 	oidc_json_parser_context *context =
 	    (oidc_json_parser_context *) userdata;
@@ -221,7 +228,9 @@ static size_t oidc_json_parser_context_callback(char *ptr, size_t size,
 
 	if (context->offset + nmemb > context->length) {
 		size_t new_size = (nmemb + context->length) * 3 / 2;
-		void * new_buffer = talloc_realloc_size(context->pool, context->buffer, new_size);
+		void *new_buffer =
+		    talloc_realloc_size(context->pool, context->buffer,
+					new_size);
 		if (new_buffer) {
 			context->buffer = new_buffer;
 			context->length = new_size;
@@ -237,7 +246,7 @@ static size_t oidc_json_parser_context_callback(char *ptr, size_t size,
 }
 
 // Download a JSON file from the provided URI and return it in a jansson object
-static json_t *oidc_fetch_json_from_uri(void * pool, const char *uri)
+static json_t *oidc_fetch_json_from_uri(void *pool, const char *uri)
 {
 	oidc_json_parser_context context = { pool, NULL, 0, 0 };
 	json_t *json = NULL;
@@ -315,7 +324,11 @@ static json_t *oidc_fetch_json_from_uri(void * pool, const char *uri)
 }
 
 // Download and parse the JWT keys for this virtual server context
+<<<<<<< HEAD
 static bool oidc_fetch_oidc_keys(oidc_vctx_st * vctx)
+=======
+static bool oidc_fetch_oidc_keys(void *pool, oidc_vctx_st * vctx)
+>>>>>>> Add SAML2 auth support, indent, update documentation
 {
 	bool result = false;
 	json_t *jwks = NULL;
@@ -331,6 +344,7 @@ static bool oidc_fetch_oidc_keys(oidc_vctx_st * vctx)
 		       "ocserv-oidc: openid_configuration_url missing from config\n");
 		goto cleanup;
 	}
+<<<<<<< HEAD
 	
 	json_t *oidc_config =
 	    oidc_fetch_json_from_uri(vctx->pool, 
@@ -340,6 +354,17 @@ static bool oidc_fetch_oidc_keys(oidc_vctx_st * vctx)
 	if (!oidc_config) {
 		syslog(LOG_ERR,
 		       "ocserv-oidc: Unable to fetch config doc from %s\n", json_string_value(openid_configuration_url));
+=======
+
+	json_t *oidc_config = oidc_fetch_json_from_uri(pool,
+						       json_string_value
+						       (openid_configuration_url));
+
+	if (!oidc_config) {
+		syslog(LOG_AUTH,
+		       "ocserv-oidc: Unable to fetch config doc from %s\n",
+		       json_string_value(openid_configuration_url));
+>>>>>>> Add SAML2 auth support, indent, update documentation
 		goto cleanup;
 	}
 
@@ -418,7 +443,6 @@ static bool oidc_verify_lifetime(json_t * token_claims)
 		syslog(LOG_NOTICE, "ocserv-oidc: Token missing 'iat' claim\n");
 		goto cleanup;
 	}
-
 	// Check to ensure the token is within it's validity
 	if (json_integer_value(token_nbf) > current_time
 	    || json_integer_value(token_exp) < current_time) {
@@ -436,7 +460,7 @@ static bool oidc_verify_lifetime(json_t * token_claims)
 }
 
 static bool oidc_verify_required_claims(json_t * required_claims,
-					  json_t * token_claims)
+					json_t * token_claims)
 {
 	bool result = false;
 
@@ -465,8 +489,8 @@ static bool oidc_verify_required_claims(json_t * required_claims,
 }
 
 static bool oidc_map_user_name(json_t * user_name_claim,
-				 json_t * token_claims,
-				 char user_name[MAX_USERNAME_SIZE])
+			       json_t * token_claims,
+			       char user_name[MAX_USERNAME_SIZE])
 {
 	bool result = false;
 
@@ -501,7 +525,6 @@ static json_t *oidc_extract_claims(cjose_jws_t * jws)
 		       "ocserv-oidc: Failed to get plain text from token\n");
 		goto cleanup;
 	}
-
 	// Parse the claim JSON
 	token_claims =
 	    json_loadb((char *)plain_text, plain_text_size, 0, &json_err);
@@ -538,15 +561,17 @@ static bool oidc_verify_singature(oidc_vctx_st * vctx, cjose_jws_t * jws)
 		syslog(LOG_NOTICE, "ocserv-oidc: JWK keys malformed\n");
 		goto cleanup;
 	}
-
 	// Get the token header
 	token_header = cjose_jws_get_protected(jws);
 	if (token_header == NULL) {
+<<<<<<< HEAD
 		syslog(LOG_NOTICE,
 		       "ocserv-oidc: Token malformed - no header\n");
+=======
+		syslog(LOG_AUTH, "ocserv-oidc: Token malformed - no header\n");
+>>>>>>> Add SAML2 auth support, indent, update documentation
 		goto cleanup;
 	}
-
 	// Get the kid of the key used to sign this token
 	token_kid = json_object_get(token_header, "kid");
 	if (token_kid == NULL || !json_string_value(token_kid)) {
@@ -555,11 +580,17 @@ static bool oidc_verify_singature(oidc_vctx_st * vctx, cjose_jws_t * jws)
 	}
 
 	token_typ = json_object_get(token_header, "typ");
+<<<<<<< HEAD
 	if (token_typ == NULL || !json_string_value(token_typ) || strcmp(json_string_value(token_typ), "JWT")) {
 		syslog(LOG_NOTICE, "ocserv-oidc: Token malformed - wrong typ claim\n");
+=======
+	if (token_typ == NULL || !json_string_value(token_typ)
+	    || strcmp(json_string_value(token_typ), "JWT")) {
+		syslog(LOG_AUTH,
+		       "ocserv-oidc: Token malformed - wrong typ claim\n");
+>>>>>>> Add SAML2 auth support, indent, update documentation
 		goto cleanup;
 	}
-
 	// Find the signing key in the keys collection
 	json_array_foreach(array, index, value) {
 		json_t *key_kid = json_object_get(value, "kid");
@@ -601,8 +632,8 @@ static bool oidc_verify_singature(oidc_vctx_st * vctx, cjose_jws_t * jws)
 
 // Verify that the provided token is signed
 static bool oidc_verify_token(oidc_vctx_st * vctx, const char *token,
-				size_t token_length,
-				char user_name[MAX_USERNAME_SIZE])
+			      size_t token_length,
+			      char user_name[MAX_USERNAME_SIZE])
 {
 	bool result = false;
 	cjose_err err;

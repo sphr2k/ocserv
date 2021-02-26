@@ -34,6 +34,7 @@ libev-dev            / libev-devel
 
 Optional dependencies that enable specific functionality:
 ```
+<<<<<<< HEAD
 TCP wrappers: libwrap0-dev        / tcp_wrappers-devel
 PAM:          libpam0g-dev        / pam-devel
 LZ4:          liblz4-dev          / lz4-devel
@@ -45,6 +46,19 @@ Radius:       libradcli-dev       / radcli-devel
 OIDC:	      libcurl4-gnutls-dev / libcurl-devel
 	      libcjose-dev        / cjose-devel
 	      libjansson-dev	  / jansson-devel
+=======
+TCP wrappers: libwrap0-dev       / tcp_wrappers-devel
+PAM:          libpam0g-dev       / pam-devel
+LZ4:          liblz4-dev         / lz4-devel
+seccomp:      libseccomp-dev     / libseccomp-devel
+occtl:        libreadline-dev    / readline-devel
+              libnl-route-3-dev  / libnl3-devel
+GSSAPI:       libkrb5-dev        / krb5-devel
+Radius:       libradcli-dev      / radcli-devel
+SAML2:        liblasso3-dev      / lasso3-devel
+              libglib2.0-dev     / glib2.0-devel
+              libapr1-dev        / apr1-devel
+>>>>>>> Add SAML2 auth support, indent, update documentation
 ```
 
 Dependencies for development, testing, or dependencies that can be skipped
@@ -125,6 +139,7 @@ and set these users on run-as-user and run-as-group options. The run:
 
 Several configuration instruction are available in [the recipes repository](https://gitlab.com/openconnect/recipes).
 
+OIDC and SAML auth instructions are in ./doc
 
 # Profiling
 
