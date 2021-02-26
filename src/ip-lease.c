@@ -307,7 +307,6 @@ int get_ipv4_lease(main_server_st * s, struct proc_st *proc)
 		if (max_loops == MAX_IP_TRIES) {
 			memcpy(SA_IN_U8_P(&rnd), proc->ipv4_seed, 4);
 		} else {
-<<<<<<< HEAD
 			if (max_loops < MAX_IP_TRIES-FIXED_IPS) {
 				ret = gnutls_rnd(GNUTLS_RND_NONCE, SA_IN_U8_P(&rnd), sizeof(struct in_addr));
 				if (ret < 0) {
@@ -315,11 +314,6 @@ int get_ipv4_lease(main_server_st * s, struct proc_st *proc)
 					ret = ERR_NO_IP;
 					goto fail;
 				}
-=======
-			if (max_loops < MAX_IP_TRIES - FIXED_IPS) {
-				gnutls_rnd(GNUTLS_RND_NONCE, SA_IN_U8_P(&rnd),
-					   sizeof(struct in_addr));
->>>>>>> Add SAML2 auth support, indent, update documentation
 			} else {
 				ip_from_seed(SA_IN_U8_P(&rnd),
 					     sizeof(struct in_addr),
@@ -497,7 +491,6 @@ int get_ipv6_lease(main_server_st * s, struct proc_st *proc)
 				     SA_IN6_U8_P(&rnd),
 				     sizeof(struct in6_addr));
 		} else {
-<<<<<<< HEAD
 			if (max_loops < MAX_IP_TRIES-FIXED_IPS) {
 				ret = gnutls_rnd(GNUTLS_RND_NONCE, SA_IN_U8_P(&rnd), sizeof(struct in6_addr));
 				if (ret < 0) {
@@ -505,11 +498,6 @@ int get_ipv6_lease(main_server_st * s, struct proc_st *proc)
 					ret = ERR_NO_IP;
 					goto fail;
 				}
-=======
-			if (max_loops < MAX_IP_TRIES - FIXED_IPS) {
-				gnutls_rnd(GNUTLS_RND_NONCE, SA_IN_U8_P(&rnd),
-					   sizeof(struct in6_addr));
->>>>>>> Add SAML2 auth support, indent, update documentation
 			} else {
 				ip_from_seed(SA_IN6_U8_P(&rnd),
 					     sizeof(struct in6_addr),

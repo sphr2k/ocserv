@@ -256,11 +256,7 @@ static void method_reload(method_ctx * ctx, int cfd, uint8_t * msg,
 
 	mslog(ctx->s, NULL, LOG_DEBUG, "ctl: reload");
 
-<<<<<<< HEAD
 	ev_feed_signal_event (main_loop, SIGHUP);
-=======
-	ev_feed_signal_event(loop, SIGHUP);
->>>>>>> Add SAML2 auth support, indent, update documentation
 
 	rep.status = 1;
 
@@ -282,11 +278,7 @@ static void method_stop(method_ctx * ctx, int cfd, uint8_t * msg,
 
 	mslog(ctx->s, NULL, LOG_DEBUG, "ctl: stop");
 
-<<<<<<< HEAD
 	ev_feed_signal_event (main_loop, SIGTERM);
-=======
-	ev_feed_signal_event(loop, SIGTERM);
->>>>>>> Add SAML2 auth support, indent, update documentation
 
 	rep.status = 1;
 
@@ -603,7 +595,6 @@ static void method_list_cookies(method_ctx * ctx, int cfd, uint8_t * msg,
 
 	mslog(ctx->s, NULL, LOG_DEBUG, "ctl: list-cookies");
 
-<<<<<<< HEAD
 	sub_replies = talloc_zero_array(ctx->pool, SecmListCookiesReplyMsg*, ctx->s->sec_mod_instance_count);
 	if (!sub_replies) {
 		goto reply_and_exit;
@@ -617,13 +608,13 @@ static void method_list_cookies(method_ctx * ctx, int cfd, uint8_t * msg,
 			mslog(ctx->s, NULL, LOG_ERR, "error sending list cookies to sec-mod!");
 			continue;
 		}
-		ret = recv_msg(ctx->pool, ctx->s->sec_mod_instances[i].sec_mod_fd_sync, CMD_SECM_LIST_COOKIES_REPLY, 
+		ret = recv_msg(ctx->pool, ctx->s->sec_mod_instances[i].sec_mod_fd_sync, CMD_SECM_LIST_COOKIES_REPLY,
 				(void*)&sub_reply, (unpack_func)secm_list_cookies_reply_msg__unpack, MAIN_SEC_MOD_TIMEOUT);
 		if (ret < 0) {
 			mslog(ctx->s, NULL, LOG_ERR, "error receiving list cookies reply");
 			continue;
 		}
-		
+
 		if (sub_reply) {
 			sub_replies[i] = sub_reply;
 			total_cookies += sub_reply->n_cookies;
@@ -653,20 +644,6 @@ reply_and_exit:
 	ret = send_msg(ctx->pool, cfd, CTL_CMD_LIST_COOKIES_REP, &reply,
 		       (pack_size_func) secm_list_cookies_reply_msg__get_packed_size,
 		       (pack_func) secm_list_cookies_reply_msg__pack);
-=======
-	ret =
-	    send_msg(ctx->pool, ctx->s->sec_mod_fd_sync, CMD_SECM_LIST_COOKIES,
-		     NULL, NULL, NULL);
-	if (ret < 0) {
-		mslog(ctx->s, NULL, LOG_ERR,
-		      "error sending list cookies to sec-mod!");
-	}
-
-	ret =
-	    forward_msg(ctx->pool, ctx->s->sec_mod_fd_sync,
-			CMD_SECM_LIST_COOKIES_REPLY, cfd,
-			CTL_CMD_LIST_COOKIES_REP, MAIN_SEC_MOD_TIMEOUT);
->>>>>>> Add SAML2 auth support, indent, update documentation
 	if (ret < 0) {
 		mslog(ctx->s, NULL, LOG_ERR,
 		      "error sending list cookies reply");

@@ -3,7 +3,7 @@
 This program is openconnect VPN server (ocserv), a server for the
 [openconnect VPN client](http://www.infradead.org/openconnect/).
 It follows the [openconnect protocol](https://gitlab.com/openconnect/protocol)
-and is believed to be compatible with CISCO's AnyConnect SSL VPN. 
+and is believed to be compatible with CISCO's AnyConnect SSL VPN.
 
 The program consists of:
  1. ocserv, the main server application
@@ -34,19 +34,6 @@ libev-dev            / libev-devel
 
 Optional dependencies that enable specific functionality:
 ```
-<<<<<<< HEAD
-TCP wrappers: libwrap0-dev        / tcp_wrappers-devel
-PAM:          libpam0g-dev        / pam-devel
-LZ4:          liblz4-dev          / lz4-devel
-seccomp:      libseccomp-dev      / libseccomp-devel
-occtl:        libreadline-dev     / readline-devel
-              libnl-route-3-dev   / libnl3-devel
-GSSAPI:       libkrb5-dev         / krb5-devel
-Radius:       libradcli-dev       / radcli-devel
-OIDC:	      libcurl4-gnutls-dev / libcurl-devel
-	      libcjose-dev        / cjose-devel
-	      libjansson-dev	  / jansson-devel
-=======
 TCP wrappers: libwrap0-dev       / tcp_wrappers-devel
 PAM:          libpam0g-dev       / pam-devel
 LZ4:          liblz4-dev         / lz4-devel
@@ -58,7 +45,6 @@ Radius:       libradcli-dev      / radcli-devel
 SAML2:        liblasso3-dev      / lasso3-devel
               libglib2.0-dev     / glib2.0-devel
               libapr1-dev        / apr1-devel
->>>>>>> Add SAML2 auth support, indent, update documentation
 ```
 
 Dependencies for development, testing, or dependencies that can be skipped
@@ -146,7 +132,7 @@ OIDC and SAML auth instructions are in ./doc
 If you use ocserv on a server with significant load and you'd like to help
 improve it, you may help by sending profiling information. That includes
 the bottlenecks in software, so future optimizations could be spent on the
-real needs. 
+real needs.
 
 In a Linux system you can profile ocserv using the following command.
 ```
@@ -172,4 +158,3 @@ container registry. The compilation/test phase is on every commit to project.
 # How the VPN works
 
 Please see the [technical description page](http://ocserv.gitlab.io/www/technical.html).
-

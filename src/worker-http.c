@@ -297,11 +297,6 @@ void header_value_check(struct worker_st *ws, struct http_req_st *req)
 	if (req->value.length <= 0)
 		return;
 
-<<<<<<< HEAD
-	if (WSPCONFIG(ws)->debug < DEBUG_SENSITIVE && header_is_sensitive(&req->header))
-		oclog(ws, LOG_HTTP_DEBUG, "HTTP processing: %.*s: (censored)", (int)req->header.length,
-		      req->header.data);
-=======
 	if (WSPCONFIG(ws)->debug < DEBUG_SENSITIVE &&
 	    ((req->header.length == 6
 	      && strncasecmp((char *)req->header.data, "Cookie", 6) == 0)
@@ -310,7 +305,6 @@ void header_value_check(struct worker_st *ws, struct http_req_st *req)
 				"X-DTLS-Master-Secret", 20) == 0)))
 		oclog(ws, LOG_HTTP_DEBUG, "HTTP processing: %.*s: (censored)",
 		      (int)req->header.length, req->header.data);
->>>>>>> Add SAML2 auth support, indent, update documentation
 	else
 		oclog(ws, LOG_HTTP_DEBUG, "HTTP processing: %.*s: %.*s",
 		      (int)req->header.length, req->header.data,

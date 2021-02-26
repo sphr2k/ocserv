@@ -92,7 +92,6 @@ void main_ban_db_deinit(main_server_st * s)
 	}
 }
 
-<<<<<<< HEAD
 #define IS_BANNED(main, entry) (entry->score >= GETCONFIG(main)->max_ban_score)
 
 unsigned main_ban_db_elems(main_server_st *s)
@@ -102,11 +101,6 @@ unsigned main_ban_db_elems(main_server_st *s)
 	struct htable_iter iter;
 	time_t now = time(0);
 	unsigned banned = 0;
-=======
-unsigned main_ban_db_elems(main_server_st * s)
-{
-	struct htable *db = s->ban_db;
->>>>>>> Add SAML2 auth support, indent, update documentation
 
 	if (db == NULL || GETCONFIG(s)->max_ban_score == 0)
 		return 0;
@@ -193,7 +187,6 @@ int add_ip_to_ban_list(main_server_st * s, const unsigned char *ip,
 	else
 		p_str_ip = inet_ntop(AF_INET6, ip, str_ip, sizeof(str_ip));
 
-<<<<<<< HEAD
 	if (GETCONFIG(s)->max_ban_score > 0 && IS_BANNED(s, e)) {
 		if (print_msg && p_str_ip) {
 			char date[256];
@@ -202,14 +195,6 @@ int add_ip_to_ban_list(main_server_st * s, const unsigned char *ip,
 				date[0] = 0;
 			}
 			mslog(s, NULL, LOG_INFO, "added IP '%s' (with score %d) to ban list, will be reset at: %s", str_ip, e->score, date);
-=======
-	if (GETCONFIG(s)->max_ban_score > 0
-	    && e->score >= GETCONFIG(s)->max_ban_score) {
-		if (print_msg && p_str_ip) {
-			mslog(s, NULL, LOG_INFO,
-			      "added IP '%s' (with score %d) to ban list, will be reset at: %s",
-			      str_ip, e->score, ctime(&e->expires));
->>>>>>> Add SAML2 auth support, indent, update documentation
 		}
 		ret = -1;
 	} else {
@@ -364,7 +349,6 @@ void cleanup_banned_entries(main_server_st * s)
 
 	}
 }
-<<<<<<< HEAD
 
 int if_address_init(main_server_st *s)
 {
@@ -387,7 +371,7 @@ int if_address_init(main_server_st *s)
 		}
 		count ++;
 	}
-	
+
 	local_if_addresses = talloc_array(s, if_address_st, count);
 	if (local_if_addresses == NULL) {
 		fprintf(stderr, "Failed to allocate");
@@ -438,11 +422,11 @@ static bool test_local_ipv4(struct sockaddr_in * remote, struct sockaddr_in * lo
 static bool test_local_ipv6(struct sockaddr_in6 * remote, struct sockaddr_in6 * local, struct sockaddr_in6 * network)
 {
 	unsigned index = 0;
-	
+
 	for (index = 0; index < 4; index ++) {
 		uint32_t l = local->sin6_addr.s6_addr32[index] & network->sin6_addr.s6_addr32[index];
 		uint32_t r = remote->sin6_addr.s6_addr32[index] & network->sin6_addr.s6_addr32[index];
-		if (l != r) 
+		if (l != r)
 			return false;
 	}
 	return true;
@@ -481,5 +465,3 @@ void if_address_cleanup(main_server_st * s)
 	s->if_addresses = NULL;
 	s->if_addresses_count = 0;
 }
-=======
->>>>>>> Add SAML2 auth support, indent, update documentation

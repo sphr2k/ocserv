@@ -114,12 +114,8 @@ static int radius_auth_init(void **ctx, void *pool, void *_vctx,
 	struct radius_vhost_ctx *vctx = _vctx;
 
 	if (info->username == NULL || info->username[0] == 0) {
-<<<<<<< HEAD
 		syslog(LOG_NOTICE,
 		       "radius-auth: no username present");
-=======
-		syslog(LOG_AUTH, "radius-auth: no username present");
->>>>>>> Add SAML2 auth support, indent, update documentation
 		return ERR_AUTH_FAIL;
 	}
 

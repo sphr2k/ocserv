@@ -202,15 +202,9 @@ int icmp_ping4(main_server_st * s, struct sockaddr_in *addr1)
 	pkt->icmp_id = id1;
 	pkt->icmp_cksum = in_cksum((unsigned short *)pkt, sizeof(packet1));
 
-<<<<<<< HEAD
 	while (sendto(pingsock, packet1, DEFDATALEN + ICMP_MINLEN, 0,
 		      (struct sockaddr *) addr1,
 		      sizeof(*addr1) == -1) && retry(errno));
-=======
-	while ((c = sendto(pingsock, packet1, DEFDATALEN + ICMP_MINLEN, 0,
-			   (struct sockaddr *)addr1,
-			   sizeof(*addr1)) == -1) && retry(errno)) ;
->>>>>>> Add SAML2 auth support, indent, update documentation
 	/* listen for replies */
 
 	now = time(0);
@@ -303,18 +297,10 @@ int icmp_ping6(main_server_st * s, struct sockaddr_in6 *addr1)
 	sockopt = offsetof(struct icmp6_hdr, icmp6_cksum);
 	setsockopt(pingsock, SOL_RAW, IPV6_CHECKSUM, &sockopt, sizeof(sockopt));
 #endif
-<<<<<<< HEAD
 	while (sendto(pingsock, packet1,
 		      DEFDATALEN + sizeof(struct icmp6_hdr), 0,
 		      (struct sockaddr *) addr1,
 		      sizeof(*addr1) == -1) && retry(errno));
-=======
-	while ((c =
-		sendto(pingsock, packet1,
-		       DEFDATALEN + sizeof(struct icmp6_hdr), 0,
-		       (struct sockaddr *)addr1,
-		       sizeof(*addr1)) == -1) && retry(errno)) ;
->>>>>>> Add SAML2 auth support, indent, update documentation
 
 	/* listen for replies */
 	now = time(0);

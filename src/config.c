@@ -137,7 +137,6 @@ static void check_cfg(vhost_cfg_st * vhost, vhost_cfg_st * defvhost,
 		varname++; \
 	}
 
-<<<<<<< HEAD
 struct snapshot_t * config_snapshot = NULL;
 
 char ** pam_auth_group_list = NULL;
@@ -148,8 +147,6 @@ unsigned gssapi_auth_group_list_size = 0;
 unsigned plain_auth_group_list_size = 0;
 
 
-=======
->>>>>>> Add SAML2 auth support, indent, update documentation
 /* Parses the string ::1/prefix, to return prefix
  * and modify the string to contain the network only.
  */
@@ -309,20 +306,12 @@ static void figure_auth_funcs(void *pool, const char *vhostname,
 			}
 			talloc_free(auth[j]);
 		}
-<<<<<<< HEAD
 		fprintf(stderr, NOTESTR"%s: setting '%s' as primary authentication method\n", vhostname, config->auth[0].name);
-=======
-		fprintf(stderr,
-			NOTESTR
-			"%ssetting '%s' as primary authentication method\n",
-			vhostname, config->auth[0].name);
->>>>>>> Add SAML2 auth support, indent, update documentation
 	} else {
 		unsigned x = config->auth_methods;
 		/* Append authentication methods (alternative options) */
 		for (j = 0; j < auth_size; j++) {
 			found = 0;
-<<<<<<< HEAD
 			for (i=0;i<sizeof(avail_auth_types)/sizeof(avail_auth_types[0]);i++) {
 				if (c_strncasecmp(auth[j], avail_auth_types[i].name, avail_auth_types[i].name_size) == 0) {
 					if (avail_auth_types[i].get_brackets_string)
@@ -334,41 +323,6 @@ static void figure_auth_funcs(void *pool, const char *vhostname,
 					check_for_duplicate_password_auth(config, vhostname, avail_auth_types[i].type);
 					config->auth[x].amod = avail_auth_types[i].mod;
 					config->auth[x].type |= avail_auth_types[i].type;
-=======
-			for (i = 0;
-			     i <
-			     sizeof(avail_auth_types) /
-			     sizeof(avail_auth_types[0]); i++) {
-				if (c_strncasecmp
-				    (auth[j], avail_auth_types[i].name,
-				     avail_auth_types[i].name_size) == 0) {
-					if (avail_auth_types[i].
-					    get_brackets_string)
-						config->auth[x].additional =
-						    avail_auth_types[i].
-						    get_brackets_string(pool,
-									config,
-									auth[j]
-									+
-									avail_auth_types
-									[i].
-									name_size);
-
-					config->auth[x].name =
-					    talloc_strdup(pool,
-							  avail_auth_types[i].
-							  name);
-					fprintf(stderr,
-						NOTESTR
-						"%s: enabling '%s' as authentication method\n",
-						vhostname,
-						avail_auth_types[i].name);
-
-					config->auth[x].amod =
-					    avail_auth_types[i].mod;
-					config->auth[x].type |=
-					    avail_auth_types[i].type;
->>>>>>> Add SAML2 auth support, indent, update documentation
 					config->auth[x].enabled = 1;
 					found = 1;
 					x++;
@@ -657,19 +611,11 @@ static void apply_default_conf(vhost_cfg_st * vhost, unsigned reload)
 	}
 
 	vhost->perm_config.config->mobile_idle_timeout = (unsigned)-1;
-<<<<<<< HEAD
 #ifdef ENABLE_COMPRESSION
 	vhost->perm_config.config->no_compress_limit = DEFAULT_NO_COMPRESS_LIMIT;
 #endif
 	vhost->perm_config.config->rekey_time = 24*60*60;
 	vhost->perm_config.config->cookie_timeout = DEFAULT_COOKIE_RECON_TIMEOUT;
-=======
-	vhost->perm_config.config->no_compress_limit =
-	    DEFAULT_NO_COMPRESS_LIMIT;
-	vhost->perm_config.config->rekey_time = 24 * 60 * 60;
-	vhost->perm_config.config->cookie_timeout =
-	    DEFAULT_COOKIE_RECON_TIMEOUT;
->>>>>>> Add SAML2 auth support, indent, update documentation
 	vhost->perm_config.config->auth_timeout = DEFAULT_AUTH_TIMEOUT_SECS;
 	vhost->perm_config.config->ban_reset_time = DEFAULT_BAN_RESET_TIME;
 	vhost->perm_config.config->max_ban_score = DEFAULT_MAX_BAN_SCORE;
@@ -847,29 +793,14 @@ static int cfg_ini_handler(void *_ctx, const char *section, const char *name,
 
 		if (strncmp(section, "vhost:", 6) != 0) {
 			if (reload == 0)
-<<<<<<< HEAD
 				fprintf(stderr, WARNSTR"skipping unknown section '%s'\n", section);
 			return 1;
-=======
-				fprintf(stderr,
-					WARNSTR
-					"skipping unknown section '%s'\n",
-					section);
-			return 0;
->>>>>>> Add SAML2 auth support, indent, update documentation
 		}
 
 		vname = sanitize_name(ctx->pool, section + 6);
 		if (vname == NULL || vname[0] == 0) {
-<<<<<<< HEAD
 			fprintf(stderr, ERRSTR"virtual host name is illegal '%s'\n", section+6);
 			return 0;
-=======
-			fprintf(stderr,
-				ERRSTR "virtual host name is illegal '%s'\n",
-				section + 6);
-			exit(1);
->>>>>>> Add SAML2 auth support, indent, update documentation
 		}
 
 		/* virtual host */
@@ -917,17 +848,10 @@ static int cfg_ini_handler(void *_ctx, const char *section, const char *name,
 		} else if (strcmp(name, "udp-listen-host") == 0) {
 			PREAD_STRING(pool, vhost->perm_config.udp_listen_host);
 		} else if (strcmp(name, "listen-clear-file") == 0) {
-<<<<<<< HEAD
 			fprintf(stderr, ERRSTR"the 'listen-clear-file' option was removed in ocserv 1.1.2\n");
 			return 0;
 		} else if (strcmp(name, "listen-netns") == 0) {
 			vhost->perm_config.listen_netns_name = talloc_strdup(pool, value);
-=======
-			if (!PWARN_ON_VHOST_STRDUP
-			    (vhost->name, "listen-clear-file", unix_conn_file))
-				PREAD_STRING(pool,
-					     vhost->perm_config.unix_conn_file);
->>>>>>> Add SAML2 auth support, indent, update documentation
 		} else if (strcmp(name, "tcp-port") == 0) {
 			if (!PWARN_ON_VHOST(vhost->name, "tcp-port", port))
 				READ_NUMERIC(vhost->perm_config.port);
@@ -938,15 +862,8 @@ static int cfg_ini_handler(void *_ctx, const char *section, const char *name,
 			if (!PWARN_ON_VHOST(vhost->name, "run-as-user", uid)) {
 				const struct passwd *pwd = getpwnam(value);
 				if (pwd == NULL) {
-<<<<<<< HEAD
 					fprintf(stderr, ERRSTR"unknown user: %s\n", value);
 					return 0;
-=======
-					fprintf(stderr,
-						ERRSTR "unknown user: %s\n",
-						value);
-					exit(1);
->>>>>>> Add SAML2 auth support, indent, update documentation
 				}
 				vhost->perm_config.uid = pwd->pw_uid;
 			}
@@ -954,15 +871,8 @@ static int cfg_ini_handler(void *_ctx, const char *section, const char *name,
 			if (!PWARN_ON_VHOST(vhost->name, "run-as-group", gid)) {
 				const struct group *grp = getgrnam(value);
 				if (grp == NULL) {
-<<<<<<< HEAD
 					fprintf(stderr, ERRSTR"unknown group: %s\n", value);
 					return 0;
-=======
-					fprintf(stderr,
-						ERRSTR "unknown group: %s\n",
-						value);
-					exit(1);
->>>>>>> Add SAML2 auth support, indent, update documentation
 				}
 				vhost->perm_config.gid = grp->gr_gid;
 			}
@@ -970,14 +880,9 @@ static int cfg_ini_handler(void *_ctx, const char *section, const char *name,
 			READ_MULTI_LINE(vhost->perm_config.cert,
 					vhost->perm_config.cert_size);
 		} else if (strcmp(name, "server-key") == 0) {
-<<<<<<< HEAD
 			READ_MULTI_LINE(vhost->perm_config.key, vhost->perm_config.key_size);
 		} else if (strcmp(name, "debug-no-secmod-stats") == 0) {
 			READ_TF(vhost->perm_config.debug_no_secmod_stats);
-=======
-			READ_MULTI_LINE(vhost->perm_config.key,
-					vhost->perm_config.key_size);
->>>>>>> Add SAML2 auth support, indent, update documentation
 		} else if (strcmp(name, "dh-params") == 0) {
 			READ_STRING(vhost->perm_config.dh_params_file);
 		} else if (strcmp(name, "pin-file") == 0) {
@@ -1022,16 +927,10 @@ static int cfg_ini_handler(void *_ctx, const char *section, const char *name,
 			if (pid_file[0] == 0) {
 				READ_STATIC_STRING(pid_file);
 			} else if (reload == 0)
-<<<<<<< HEAD
 				fprintf(stderr, NOTESTR"skipping 'pid-file' config option\n");
 		} else if (strcmp(name, "sec-mod-scale") == 0) {
 			if (!PWARN_ON_VHOST(vhost->name, "sec-mod-scale", sec_mod_scale))
 				READ_NUMERIC(vhost->perm_config.sec_mod_scale);
-=======
-				fprintf(stderr,
-					NOTESTR
-					"skipping 'pid-file' config option\n");
->>>>>>> Add SAML2 auth support, indent, update documentation
 		} else {
 			stage1_found = 0;
 		}
@@ -1079,7 +978,7 @@ static int cfg_ini_handler(void *_ctx, const char *section, const char *name,
 #ifdef ANYCONNECT_CLIENT_COMPAT
 	} else if (strcmp(name, "user-profile") == 0) {
 		READ_STRING(config->xml_config_file);
-#endif 
+#endif
 	} else if (strcmp(name, "default-domain") == 0) {
 		READ_STRING(config->default_domain);
 	} else if (strcmp(name, "crl") == 0) {
@@ -1128,13 +1027,8 @@ static int cfg_ini_handler(void *_ctx, const char *section, const char *name,
 	} else if (strcmp(name, "compression") == 0) {
 		READ_TF(config->enable_compression);
 	} else if (strcmp(name, "compression-algo-priority") == 0) {
-<<<<<<< HEAD
 		if (!WARN_ON_VHOST_ONLY(vhost->name, "compression-algo-priority")) {
 #if defined(OCSERV_WORKER_PROCESS)
-=======
-		if (!WARN_ON_VHOST_ONLY
-		    (vhost->name, "compression-algo-priority")) {
->>>>>>> Add SAML2 auth support, indent, update documentation
 			if (switch_comp_priority(pool, value) == 0) {
 				fprintf(stderr,
 					WARNSTR
@@ -1184,14 +1078,8 @@ static int cfg_ini_handler(void *_ctx, const char *section, const char *name,
 		    cfg_parse_ports(pool, &config->fw_ports,
 				    &config->n_fw_ports, value);
 		if (ret < 0) {
-<<<<<<< HEAD
 			fprintf(stderr, ERRSTR"cannot parse restrict-user-to-ports\n");
 			return 0;
-=======
-			fprintf(stderr,
-				ERRSTR "cannot parse restrict-user-to-ports\n");
-			exit(1);
->>>>>>> Add SAML2 auth support, indent, update documentation
 		}
 	} else if (strcmp(name, "tls-priorities") == 0) {
 		READ_STRING(config->priorities);
@@ -1219,14 +1107,8 @@ static int cfg_ini_handler(void *_ctx, const char *section, const char *name,
 		else if (strcmp(value, "new-tunnel") == 0)
 			config->rekey_method = REKEY_METHOD_NEW_TUNNEL;
 		else {
-<<<<<<< HEAD
 			fprintf(stderr, ERRSTR"unknown rekey method '%s'\n", value);
 			return 0;
-=======
-			fprintf(stderr, ERRSTR "unknown rekey method '%s'\n",
-				value);
-			exit(1);
->>>>>>> Add SAML2 auth support, indent, update documentation
 		}
 	} else if (strcmp(name, "cookie-timeout") == 0) {
 		READ_NUMERIC(config->cookie_timeout);
@@ -1295,14 +1177,8 @@ static int cfg_ini_handler(void *_ctx, const char *section, const char *name,
 		READ_NUMERIC(config->network.ipv6_prefix);
 
 		if (valid_ipv6_prefix(config->network.ipv6_prefix) == 0) {
-<<<<<<< HEAD
 			fprintf(stderr, ERRSTR"invalid IPv6 prefix: %u\n", prefix);
 			return 0;
-=======
-			fprintf(stderr, ERRSTR "invalid IPv6 prefix: %u\n",
-				prefix);
-			exit(1);
->>>>>>> Add SAML2 auth support, indent, update documentation
 		}
 	} else if (strcmp(name, "ipv6-subnet-prefix") == 0) {
 		/* read subnet prefix */
@@ -1311,16 +1187,8 @@ static int cfg_ini_handler(void *_ctx, const char *section, const char *name,
 			config->network.ipv6_subnet_prefix = prefix;
 
 			if (valid_ipv6_prefix(prefix) == 0) {
-<<<<<<< HEAD
 				fprintf(stderr, ERRSTR"invalid IPv6 subnet prefix: %u\n", prefix);
 				return 0;
-=======
-				fprintf(stderr,
-					ERRSTR
-					"invalid IPv6 subnet prefix: %u\n",
-					prefix);
-				exit(1);
->>>>>>> Add SAML2 auth support, indent, update documentation
 			}
 		}
 	} else if (strcmp(name, "custom-header") == 0) {
@@ -1385,14 +1253,9 @@ static int cfg_ini_handler(void *_ctx, const char *section, const char *name,
 }
 
 enum {
-<<<<<<< HEAD
 	CFG_FLAG_RELOAD = (1<<0),
 	CFG_FLAG_SECMOD = (1<<1),
 	CFG_FLAG_WORKER = (1<<2)
-=======
-	CFG_FLAG_RELOAD = (1 << 0),
-	CFG_FLAG_SECMOD = (1 << 1)
->>>>>>> Add SAML2 auth support, indent, update documentation
 };
 
 static void replace_file_with_snapshot(char ** file_name)
@@ -1403,8 +1266,8 @@ static void replace_file_with_snapshot(char ** file_name)
 	}
 
 	if (snapshot_lookup_filename(
-			config_snapshot, 
-			*file_name, 
+			config_snapshot,
+			*file_name,
 			&snapshot_file_name) < 0) {
 		fprintf(stderr, ERRSTR"cannot find snapshot for file %s\n", *file_name);
 		exit(1);
@@ -1439,7 +1302,7 @@ static void parse_cfg_file(void *pool, const char *file, struct list_head *head,
 	if ((flags & CFG_FLAG_WORKER) == CFG_FLAG_WORKER) {
 		char * snapshot_file = NULL;
 
-		if ((snapshot_lookup_filename(config_snapshot, file, &snapshot_file) < 0) && 
+		if ((snapshot_lookup_filename(config_snapshot, file, &snapshot_file) < 0) &&
 			(snapshot_lookup_filename(config_snapshot, OLD_DEFAULT_CFG_FILE, &snapshot_file) < 0)) {
 			fprintf(stderr, ERRSTR"snapshot_lookup failed for file %s\n", file);
 			exit(1);
@@ -1481,7 +1344,7 @@ static void parse_cfg_file(void *pool, const char *file, struct list_head *head,
 			CONFIG_ERROR(local_cfg_file, ret);
 			exit(1);
 		}
-		
+
 		ret = snapshot_create(config_snapshot, local_cfg_file);
 		if (ret < 0){
 			fprintf(stderr, ERRSTR"cannot snapshot config file %s\n", local_cfg_file);
@@ -1513,13 +1376,8 @@ static void parse_cfg_file(void *pool, const char *file, struct list_head *head,
 		ret = ini_parse(local_cfg_file, cfg_ini_handler, &ctx);
 	}
 
-<<<<<<< HEAD
 	if (ret != 0) {
 		CONFIG_ERROR(local_cfg_file, ret);
-=======
-	if (ret < 0) {
-		fprintf(stderr, ERRSTR "cannot load config file %s\n", file);
->>>>>>> Add SAML2 auth support, indent, update documentation
 		exit(1);
 	}
 #endif
@@ -1553,7 +1411,6 @@ static void parse_cfg_file(void *pool, const char *file, struct list_head *head,
 			vhost->auth_init = 1;
 		}
 
-<<<<<<< HEAD
 		if (vhost->auto_select_group != 0 && vhost->perm_config.auth[0].amod != NULL && vhost->perm_config.auth[0].amod->group_list != NULL) {
 			vhost->perm_config.auth[0].amod->group_list(config, vhost->perm_config.auth[0].additional, &config->group_list, &config->group_list_size);
 			switch (vhost->perm_config.auth[0].amod->type) {
@@ -1570,20 +1427,6 @@ static void parse_cfg_file(void *pool, const char *file, struct list_head *head,
 				plain_auth_group_list_size = config->group_list_size;
 				break;
 			}
-=======
-		if (vhost->auto_select_group != 0
-		    && vhost->perm_config.auth[0].amod != NULL
-		    && vhost->perm_config.auth[0].amod->group_list != NULL) {
-			vhost->perm_config.auth[0].amod->group_list(config,
-								    vhost->
-								    perm_config.
-								    auth[0].
-								    additional,
-								    &config->
-								    group_list,
-								    &config->
-								    group_list_size);
->>>>>>> Add SAML2 auth support, indent, update documentation
 		}
 
 		if (vhost->expose_iroutes != 0) {
@@ -1651,24 +1494,10 @@ static void check_cfg(vhost_cfg_st * vhost, vhost_cfg_st * defvhost,
 		}
 	}
 
-<<<<<<< HEAD
 	if (vhost->perm_config.port == 0) {
 		if (defvhost) {
 			if (vhost->perm_config.port)
 				vhost->perm_config.port = defvhost->perm_config.port;
-=======
-	if (vhost->perm_config.port == 0
-	    && vhost->perm_config.unix_conn_file == NULL) {
-		if (defvhost) {
-			if (vhost->perm_config.port)
-				vhost->perm_config.port =
-				    vhost->perm_config.port;
-			else if (vhost->perm_config.unix_conn_file)
-				vhost->perm_config.unix_conn_file =
-				    talloc_strdup(vhost,
-						  vhost->perm_config.
-						  unix_conn_file);
->>>>>>> Add SAML2 auth support, indent, update documentation
 		} else {
 			fprintf(stderr,
 				ERRSTR "%sthe tcp-port option is mandatory!\n",
@@ -1757,21 +1586,7 @@ static void check_cfg(vhost_cfg_st * vhost, vhost_cfg_st * defvhost,
 		}
 	}
 
-<<<<<<< HEAD
 #ifdef ANYCONNECT_CLIENT_COMPAT
-=======
-	if (vhost->perm_config.unix_conn_file != NULL
-	    && (config->cert_req != 0)) {
-		if (config->listen_proxy_proto == 0) {
-			fprintf(stderr,
-				ERRSTR
-				"%sthe option 'listen-clear-file' cannot be combined with 'auth=certificate'\n",
-				PREFIX_VHOST(vhost));
-			exit(1);
-		}
-	}
-
->>>>>>> Add SAML2 auth support, indent, update documentation
 	if (vhost->perm_config.cert && vhost->perm_config.cert_hash == NULL) {
 		vhost->perm_config.cert_hash =
 		    calc_sha1_hash(vhost->pool, vhost->perm_config.cert[0], 1);
@@ -1815,20 +1630,9 @@ static void check_cfg(vhost_cfg_st * vhost, vhost_cfg_st * defvhost,
 		}
 
 		if (defvhost) {
-<<<<<<< HEAD
 			config->priorities = talloc_asprintf(config, "%s%s", defvhost->perm_config.config->priorities, tmp);
 		} else {
 			config->priorities = talloc_asprintf(config, "%s%s", "NORMAL:%SERVER_PRECEDENCE:%COMPAT", tmp);
-=======
-			config->priorities =
-			    talloc_strdup(config,
-					  defvhost->perm_config.config->
-					  priorities);
-		} else {
-			config->priorities =
-			    talloc_strdup(config,
-					  "NORMAL:%SERVER_PRECEDENCE:%COMPAT");
->>>>>>> Add SAML2 auth support, indent, update documentation
 		}
 	}
 
@@ -1868,19 +1672,6 @@ static void check_cfg(vhost_cfg_st * vhost, vhost_cfg_st * defvhost,
 		config->dtls_legacy = 1;
 	}
 
-<<<<<<< HEAD
-=======
-	if (vhost->perm_config.unix_conn_file) {
-		if (config->dtls_psk && !silent) {
-			fprintf(stderr,
-				NOTESTR
-				"%s'dtls-psk' cannot be combined with unix socket file\n",
-				PREFIX_VHOST(vhost));
-		}
-		config->dtls_psk = 0;
-	}
-
->>>>>>> Add SAML2 auth support, indent, update documentation
 	if (config->match_dtls_and_tls) {
 		if (config->dtls_legacy) {
 			fprintf(stderr,
@@ -2009,11 +1800,7 @@ void usage(void)
 	fprintf(stderr, "Please send bug reports to:  " PACKAGE_BUGREPORT "\n");
 }
 
-<<<<<<< HEAD
 int cmd_parser (void *pool, int argc, char **argv, struct list_head *head, bool worker)
-=======
-int cmd_parser(void *pool, int argc, char **argv, struct list_head *head)
->>>>>>> Add SAML2 auth support, indent, update documentation
 {
 	unsigned test_only = 0;
 	int c;
@@ -2288,16 +2075,16 @@ void clear_old_configs(struct list_head *head)
 }
 
 // ocserv and ocserv-worker both load and parse the configuration files.
-// As part of the process of loading the config files, auth / acct methods 
+// As part of the process of loading the config files, auth / acct methods
 // are enabled based on the content of the acct_mod_st and auth_mod_st tables.
 // These auth tables are present in the auth sub-subsystem. Linking against
 // the auth subsystem pulls in a very large set of dependent binaries which
-// increases the overall memory footprint. To avoid this, we provide stub 
+// increases the overall memory footprint. To avoid this, we provide stub
 // versions of acct_mod_st and auth_mod_st tables that the ocserv-worker
 // process can link against.
 #if defined(OCSERV_WORKER_PROCESS)
 
-// Group information is populated by the auth subsystem. 
+// Group information is populated by the auth subsystem.
 // When compiles as part of ocserv-worker, the auth subsystem is not present.
 // To work around this, the group information is passed from ocserv-main to
 // ocserv-worker, which then caches it and returns it when queried.

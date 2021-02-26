@@ -61,14 +61,9 @@ enum {
 static int ocserv_conv(int msg_size, const struct pam_message **msg,
 		       struct pam_response **resp, void *uptr)
 {
-<<<<<<< HEAD
 	struct pam_ctx_st * pctx = uptr;
 	unsigned i;
 	int ret;
-=======
-	struct pam_ctx_st *pctx = uptr;
-	unsigned i;
->>>>>>> Add SAML2 auth support, indent, update documentation
 
 	if (msg_size == 0)
 		return PAM_SUCCESS;
@@ -99,7 +94,6 @@ static int ocserv_conv(int msg_size, const struct pam_message **msg,
 
 			}
 
-<<<<<<< HEAD
 				// That should never happen, but also not a big deal if we fail to add message here.
 				// coverity[check_return : FALSE]
 				ret = str_append_str(&pctx->msg, msg[i]->msg);
@@ -147,27 +141,6 @@ static int ocserv_conv(int msg_size, const struct pam_message **msg,
 				pctx->sent_msg = 0;
 				break;
                 }
-=======
-			if (msg[i]->msg) {
-				str_append_str(&pctx->msg, msg[i]->msg);
-			}
-
-			syslog(LOG_DEBUG, "PAM-auth conv: echo-%s, msg: '%s'",
-			       (msg[i]->msg_style ==
-				PAM_PROMPT_ECHO_ON) ? "on" : "off",
-			       msg[i]->msg != NULL ? msg[i]->msg : "");
-
-			pctx->state = PAM_S_WAIT_FOR_PASS;
-			pctx->cr_ret = PAM_SUCCESS;
-			co_resume();
-			pctx->state = PAM_S_INIT;
-
-			if (pctx->password[0] != 0)
-				pctx->replies[i].resp = strdup(pctx->password);
-			pctx->sent_msg = 0;
-			break;
-		}
->>>>>>> Add SAML2 auth support, indent, update documentation
 	}
 
 	*resp = pctx->replies;
@@ -225,12 +198,8 @@ static int pam_auth_init(void **ctx, void *pool, void *vctx,
 	struct pam_ctx_st *pctx;
 
 	if (info->username == NULL || info->username[0] == 0) {
-<<<<<<< HEAD
 		syslog(LOG_NOTICE,
 		       "pam-auth: no username present");
-=======
-		syslog(LOG_AUTH, "pam-auth: no username present");
->>>>>>> Add SAML2 auth support, indent, update documentation
 		return ERR_AUTH_FAIL;
 	}
 
@@ -244,12 +213,7 @@ static int pam_auth_init(void **ctx, void *pool, void *vctx,
 	pctx->dc.appdata_ptr = pctx;
 	pret = pam_start(PACKAGE, info->username, &pctx->dc, &pctx->ph);
 	if (pret != PAM_SUCCESS) {
-<<<<<<< HEAD
 		syslog(LOG_NOTICE, "PAM-auth init: %s", pam_strerror(pctx->ph, pret));
-=======
-		syslog(LOG_AUTH, "PAM-auth init: %s",
-		       pam_strerror(pctx->ph, pret));
->>>>>>> Add SAML2 auth support, indent, update documentation
 		goto fail1;
 	}
 
@@ -288,12 +252,7 @@ static int pam_auth_msg(void *ctx, void *pool, passwd_msg_st * pst)
 		co_call(pctx->cr);
 
 		if (pctx->cr_ret != PAM_SUCCESS) {
-<<<<<<< HEAD
 			syslog(LOG_NOTICE, "PAM-auth pam_auth_msg: %s", pam_strerror(pctx->ph, pctx->cr_ret));
-=======
-			syslog(LOG_AUTH, "PAM-auth pam_auth_msg: %s",
-			       pam_strerror(pctx->ph, pctx->cr_ret));
->>>>>>> Add SAML2 auth support, indent, update documentation
 			return ERR_AUTH_FAIL;
 		}
 	}
@@ -316,7 +275,7 @@ static int pam_auth_msg(void *ctx, void *pool, passwd_msg_st * pst)
 	pst->counter = pctx->passwd_counter;
 
 	/* differentiate password prompts, if the hash of the prompt
-	 * is different. 
+	 * is different.
 	 */
 	if (pctx->prev_prompt_hash != prompt_hash)
 		pctx->passwd_counter++;
@@ -335,13 +294,7 @@ static int pam_auth_pass(void *ctx, const char *pass, unsigned pass_len)
 		return -1;
 
 	if (pctx->state != PAM_S_WAIT_FOR_PASS) {
-<<<<<<< HEAD
 		syslog(LOG_NOTICE, "PAM auth: conversation left in wrong state (%d/expecting %d)", pctx->state, PAM_S_WAIT_FOR_PASS);
-=======
-		syslog(LOG_AUTH,
-		       "PAM auth: conversation left in wrong state (%d/expecting %d)",
-		       pctx->state, PAM_S_WAIT_FOR_PASS);
->>>>>>> Add SAML2 auth support, indent, update documentation
 		return ERR_AUTH_FAIL;
 	}
 
@@ -352,12 +305,7 @@ static int pam_auth_pass(void *ctx, const char *pass, unsigned pass_len)
 	co_call(pctx->cr);
 
 	if (pctx->cr_ret != PAM_SUCCESS) {
-<<<<<<< HEAD
 		syslog(LOG_NOTICE, "PAM-auth pam_auth_pass: %s", pam_strerror(pctx->ph, pctx->cr_ret));
-=======
-		syslog(LOG_AUTH, "PAM-auth pam_auth_pass: %s",
-		       pam_strerror(pctx->ph, pctx->cr_ret));
->>>>>>> Add SAML2 auth support, indent, update documentation
 		return ERR_AUTH_FAIL;
 	}
 
@@ -388,11 +336,7 @@ static int pam_auth_user(void *ctx, char *username, int username_size)
 
 	pret = pam_get_item(pctx->ph, PAM_USER, (const void **)&user);
 	if (pret != PAM_SUCCESS) {
-<<<<<<< HEAD
 		/*syslog(LOG_NOTICE, "PAM-auth: pam_get_item(PAM_USER): %s", pam_strerror(pctx->ph, pret));*/
-=======
-		/*syslog(LOG_AUTH, "PAM-auth: pam_get_item(PAM_USER): %s", pam_strerror(pctx->ph, pret)); */
->>>>>>> Add SAML2 auth support, indent, update documentation
 		return -1;
 	}
 

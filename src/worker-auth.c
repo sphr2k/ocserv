@@ -83,12 +83,8 @@ static const char ocv3_success_msg_foot[] = "</auth>\n";
     "<message>%s</message>\n" \
     "<form method=\"post\" action=\"/auth\">\n"
 
-<<<<<<< HEAD
 #define OC_LOGIN_END \
     "</form></auth>\n" "</config-auth>"
-=======
-static const char oc_login_msg_end[] = "</form></auth>\n" "</config-auth>";
->>>>>>> Add SAML2 auth support, indent, update documentation
 
 #define OC_LOGIN_FORM_INPUT_USER \
     "<input type=\"text\" name=\"username\" label=\"Username:\" />\n"
@@ -112,8 +108,6 @@ static const char oc_login_msg_end[] = "</form></auth>\n" "</config-auth>";
 #define HTTP_AUTH_OIDC_PREFIX "Bearer"
 #endif
 
-<<<<<<< HEAD
-=======
 #ifdef HAVE_SAML
 #define OC_SAML_LOGIN_MSG_START \
 	"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" \
@@ -168,7 +162,6 @@ static char saml_success_page[] =
 #endif
 
 static const char ocv3_login_msg_end[] = "</form></auth>\n";
->>>>>>> Add SAML2 auth support, indent, update documentation
 
 static int get_cert_info(worker_st * ws);
 static int basic_auth_handler(worker_st * ws, unsigned http_ver,
@@ -501,10 +494,6 @@ int get_auth_handler2(worker_st * ws, unsigned http_ver, const char *pmsg,
 		if (ws->auth_state == S_AUTH_REQ)
 			login_start = OCV3_PASSWD_START;
 		else
-<<<<<<< HEAD
-			login_start = OCV3_LOGIN_START;
-		login_end = OCV3_LOGIN_END;
-=======
 			login_msg_start = OCV3_LOGIN_MSG_START;
 		login_msg_end = ocv3_login_msg_end;
 #ifdef HAVE_SAML
@@ -512,7 +501,6 @@ int get_auth_handler2(worker_st * ws, unsigned http_ver, const char *pmsg,
 		login_msg_start = OC_SAML_LOGIN_MSG_START;
 		login_msg_end = oc_login_msg_end;
 #endif
->>>>>>> Add SAML2 auth support, indent, update documentation
 	} else {
 		login_start = OC_LOGIN_START;
 		login_end = OC_LOGIN_END;
@@ -550,14 +538,8 @@ int get_auth_handler2(worker_st * ws, unsigned http_ver, const char *pmsg,
 
 		ret =
 		    cstp_printf(ws,
-<<<<<<< HEAD
 			       "Set-Cookie: webvpncontext=%s; Max-Age=%u; Secure; HttpOnly\r\n",
 			       context, (unsigned)WSCONFIG(ws)->cookie_timeout);
-=======
-				"Set-Cookie: webvpncontext=%s; Max-Age=%u; Secure\r\n",
-				context,
-				(unsigned)WSCONFIG(ws)->cookie_timeout);
->>>>>>> Add SAML2 auth support, indent, update documentation
 		if (ret < 0)
 			return -1;
 
@@ -567,11 +549,7 @@ int get_auth_handler2(worker_st * ws, unsigned http_ver, const char *pmsg,
 	} else {
 		ret =
 		    cstp_puts(ws,
-<<<<<<< HEAD
 			     "Set-Cookie: webvpncontext=; expires=Thu, 01 Jan 1970 22:00:00 GMT; path=/; Secure; HttpOnly\r\n");
-=======
-			      "Set-Cookie: webvpncontext=; expires=Thu, 01 Jan 1970 22:00:00 GMT; path=/; Secure\r\n");
->>>>>>> Add SAML2 auth support, indent, update documentation
 		if (ret < 0)
 			return -1;
 	}
@@ -583,15 +561,8 @@ int get_auth_handler2(worker_st * ws, unsigned http_ver, const char *pmsg,
 	}
 
 	if (ws->auth_state == S_AUTH_REQ) {
-<<<<<<< HEAD
 		/* Password Form */
 		if (pmsg == NULL || strncasecmp(pmsg, DEFAULT_PASSWD_LABEL, sizeof(DEFAULT_PASSWD_LABEL)-1) == 0)
-=======
-		/* only ask password */
-		if (pmsg == NULL
-		    || strncasecmp(pmsg, DEFAULT_PASSWD_LABEL,
-				   sizeof(DEFAULT_PASSWD_LABEL) - 1) == 0)
->>>>>>> Add SAML2 auth support, indent, update documentation
 			pmsg = "Please enter your password.";
 
 		ret = str_append_str(&str, login_start);
@@ -607,13 +578,7 @@ int get_auth_handler2(worker_st * ws, unsigned http_ver, const char *pmsg,
 		}
 
 		if (pcounter > 0)
-<<<<<<< HEAD
 			ret = str_append_printf(&str, OC_LOGIN_FORM_INPUT_PASSWORD_CTR, pcounter);
-=======
-			ret =
-			    str_append_printf(&str, LOGIN_MSG_PASSWORD_CTR,
-					      pcounter);
->>>>>>> Add SAML2 auth support, indent, update documentation
 		else
 			ret = str_append_str(&str, OC_LOGIN_FORM_INPUT_PASSWORD);
 		if (ret < 0) {
@@ -627,15 +592,11 @@ int get_auth_handler2(worker_st * ws, unsigned http_ver, const char *pmsg,
 			goto cleanup;
 		}
 	} else {
-<<<<<<< HEAD
-		/* Username / Groups Form */
-=======
 #ifdef HAVE_SAML
 		if (ws->selected_auth->type & AUTH_TYPE_SAML) {
 			pmsg = ws->vhost->perm_config.config->default_domain;
 		}
 #endif
->>>>>>> Add SAML2 auth support, indent, update documentation
 		if (pmsg == NULL)
 			pmsg = "Please enter your username.";
 
@@ -853,11 +814,7 @@ int get_cert_names(worker_st * ws, const gnutls_datum_t * raw)
 			size = sizeof(ws->cert_username);
 			ret =
 			    gnutls_x509_crt_get_subject_alt_name(crt, i,
-<<<<<<< HEAD
 								 cert_username,
-=======
-								 ws->cert_username,
->>>>>>> Add SAML2 auth support, indent, update documentation
 								 &size, NULL);
 			if (ret < 0) {
 				if (ret == GNUTLS_E_REQUESTED_DATA_NOT_AVAILABLE)
@@ -878,17 +835,11 @@ int get_cert_names(worker_st * ws, const gnutls_datum_t * raw)
 		size = sizeof(ws->cert_username);
 		ret =
 		    gnutls_x509_crt_get_dn_by_oid(crt,
-<<<<<<< HEAD
 					  WSCONFIG(ws)->cert_user_oid, 0,
 					  0, cert_username, &size);
 		if (ret >= 0)
 			strlcpy(ws->cert_username, cert_username, sizeof(ws->cert_username));
 
-=======
-						  WSCONFIG(ws)->cert_user_oid,
-						  0, 0, ws->cert_username,
-						  &size);
->>>>>>> Add SAML2 auth support, indent, update documentation
 	} else {
 		size = sizeof(ws->cert_username);
 		ret = gnutls_x509_crt_get_dn(crt, cert_username, &size);
@@ -1387,23 +1338,13 @@ int post_common_handler(worker_st * ws, unsigned http_ver, const char *imsg)
 		success_msg_foot = NULL;
 #ifdef ANYCONNECT_CLIENT_COMPAT
 		if (WSCONFIG(ws)->xml_config_file) {
-<<<<<<< HEAD
 			success_msg_foot = talloc_asprintf(ws, OC_SUCCESS_MSG_FOOT_PROFILE,
 				WSCONFIG(ws)->xml_config_file, WSCONFIG(ws)->xml_config_hash);
-		} 
+		}
 #endif
 
 		if (success_msg_foot == NULL) {
 			success_msg_foot = talloc_strdup(ws, OC_SUCCESS_MSG_FOOT);
-=======
-			success_msg_foot =
-			    talloc_asprintf(ws, OC_SUCCESS_MSG_FOOT_PROFILE,
-					    WSCONFIG(ws)->xml_config_file,
-					    WSCONFIG(ws)->xml_config_hash);
-		} else {
-			success_msg_foot =
-			    talloc_strdup(ws, OC_SUCCESS_MSG_FOOT);
->>>>>>> Add SAML2 auth support, indent, update documentation
 		}
 
 		if (success_msg_foot == NULL)
@@ -1481,13 +1422,8 @@ int post_common_handler(worker_st * ws, unsigned http_ver, const char *imsg)
 
 		ret =
 		    cstp_printf(ws,
-<<<<<<< HEAD
 			       "Set-Cookie: webvpncontext=%s; Secure; HttpOnly\r\n",
 			       context);
-=======
-				"Set-Cookie: webvpncontext=%s; Secure\r\n",
-				context);
->>>>>>> Add SAML2 auth support, indent, update documentation
 		if (ret < 0)
 			goto fail;
 
@@ -1506,32 +1442,23 @@ int post_common_handler(worker_st * ws, unsigned http_ver, const char *imsg)
 	}
 #endif
 
-<<<<<<< HEAD
 	ret =
 	    cstp_printf(ws,
 		       "Set-Cookie: webvpn=%s; Secure; HttpOnly\r\n",
 		       str_cookie);
-=======
-	ret = cstp_printf(ws, "Set-Cookie: webvpn=%s; Secure\r\n", str_cookie);
->>>>>>> Add SAML2 auth support, indent, update documentation
 	if (ret < 0)
 		goto fail;
 
 	ret =
 	    cstp_puts(ws,
-<<<<<<< HEAD
 		     "Set-Cookie: webvpnc=; expires=Thu, 01 Jan 1970 22:00:00 GMT; path=/; Secure; HttpOnly\r\n");
-=======
-		      "Set-Cookie: webvpnc=; expires=Thu, 01 Jan 1970 22:00:00 GMT; path=/; Secure\r\n");
->>>>>>> Add SAML2 auth support, indent, update documentation
 	if (ret < 0)
 		goto fail;
 
-#ifdef ANYCONNECT_CLIENT_COMPAT	
+#ifdef ANYCONNECT_CLIENT_COMPAT
 	if (WSCONFIG(ws)->xml_config_file) {
 		ret =
 		    cstp_printf(ws,
-<<<<<<< HEAD
 			       "Set-Cookie: webvpnc=bu:/&p:t&iu:1/&sh:%s&lu:/+CSCOT+/translation-table?textdomain%%3DAnyConnect%%26type%%3Dmanifest&fu:profiles%%2F%s&fh:%s; path=/; Secure; HttpOnly\r\n",
 			       WSPCONFIG(ws)->cert_hash,
 			       WSCONFIG(ws)->xml_config_file,
@@ -1541,17 +1468,6 @@ int post_common_handler(worker_st * ws, unsigned http_ver, const char *imsg)
 		    cstp_printf(ws,
 			       "Set-Cookie: webvpnc=bu:/&p:t&iu:1/&sh:%s; path=/; Secure; HttpOnly\r\n",
 			       WSPCONFIG(ws)->cert_hash);
-=======
-				"Set-Cookie: webvpnc=bu:/&p:t&iu:1/&sh:%s&lu:/+CSCOT+/translation-table?textdomain%%3DAnyConnect%%26type%%3Dmanifest&fu:profiles%%2F%s&fh:%s; path=/; Secure\r\n",
-				WSPCONFIG(ws)->cert_hash,
-				WSCONFIG(ws)->xml_config_file,
-				WSCONFIG(ws)->xml_config_hash);
-	} else {
-		ret =
-		    cstp_printf(ws,
-				"Set-Cookie: webvpnc=bu:/&p:t&iu:1/&sh:%s; path=/; Secure\r\n",
-				WSPCONFIG(ws)->cert_hash);
->>>>>>> Add SAML2 auth support, indent, update documentation
 	}
 #endif
 
@@ -2014,7 +1930,6 @@ int post_auth_handler(worker_st * ws, unsigned http_ver)
 				   WSCONFIG(ws)->default_select_group) == 0) {
 				def_group = 1;
 			} else {
-<<<<<<< HEAD
 				/* Some anyconnect clients send the group friendly name instead of
 				 * the actual value; see #267 */
 				ws->groupname[0] = 0;
@@ -2039,10 +1954,6 @@ int post_auth_handler(worker_st * ws, unsigned http_ver)
 
 				if (ws->groupname[0] == 0)
 					strlcpy(ws->groupname, groupname, sizeof(ws->groupname));
-=======
-				strlcpy(ws->groupname, groupname,
-					sizeof(ws->groupname));
->>>>>>> Add SAML2 auth support, indent, update documentation
 				ireq.group_name = ws->groupname;
 			}
 		}
@@ -2348,27 +2259,14 @@ int post_auth_handler(worker_st * ws, unsigned http_ver)
 	if (sd != -1)
 		close(sd);
 	oclog(ws, LOG_HTTP_DEBUG, "HTTP sending: 401 Unauthorized");
-<<<<<<< HEAD
 	ret = cstp_printf(ws,
 		   "HTTP/1.%d 401 %s\r\nContent-Length: 0\r\n\r\n",
 		   http_ver, reason);
 	if (ret >= 0)
 		cstp_fatal_close(ws, GNUTLS_A_ACCESS_DENIED);
-=======
-	cstp_cork(ws);
-	cstp_printf(ws,
-		    "HTTP/1.%d 401 %s\r\nContent-Length: 0\r\n",
-		    http_ver, reason);
-	cstp_puts(ws,
-		  "Set-Cookie: webvpncontext=; expires=Thu, 01 Jan 1970 22:00:00 GMT; path=/; Secure\r\n");
-	cstp_puts(ws, "\r\n");
-	cstp_uncork(ws);
-	cstp_fatal_close(ws, GNUTLS_A_ACCESS_DENIED);
->>>>>>> Add SAML2 auth support, indent, update documentation
 	talloc_free(msg);
 	exit_worker(ws);
  cleanup:
 	talloc_free(msg);
 	return ret;
 }
-

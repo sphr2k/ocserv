@@ -175,16 +175,10 @@ int send_cookie_auth_reply(main_server_st * s, struct proc_st *proc, AUTHREP r)
 	return 0;
 }
 
-<<<<<<< HEAD
 int handle_auth_cookie_req(sec_mod_instance_st * sec_mod_instance, struct proc_st* proc,
  			   const AuthCookieRequestMsg * req)
 {
 	main_server_st * s = sec_mod_instance->server;
-=======
-int handle_auth_cookie_req(main_server_st * s, struct proc_st *proc,
-			   const AuthCookieRequestMsg * req)
-{
->>>>>>> Add SAML2 auth support, indent, update documentation
 	int ret;
 	struct proc_st *old_proc;
 
@@ -223,17 +217,8 @@ int handle_auth_cookie_req(main_server_st * s, struct proc_st *proc,
 
 	/* disconnect and re-use previous session's IPs*/
 	if (old_proc != NULL) {
-<<<<<<< HEAD
 		if (strcmp(proc->username, old_proc->username) != 0) {
 			mslog(s, old_proc, LOG_ERR, "the user of the new session doesn't match the old (new: %s)",
-=======
-		mslog(s, old_proc, LOG_INFO,
-		      "disconnecting previous user session due to session re-use");
-
-		if (strcmp(proc->username, old_proc->username) != 0) {
-			mslog(s, old_proc, LOG_ERR,
-			      "the user of the new session doesn't match the old (new: %s)",
->>>>>>> Add SAML2 auth support, indent, update documentation
 			      proc->username);
 			return -1;
 		}
@@ -268,14 +253,14 @@ int handle_auth_cookie_req(main_server_st * s, struct proc_st *proc,
 	return 0;
 }
 
-/* Checks for multiple users. 
- * 
+/* Checks for multiple users.
+ *
  * It returns a negative error code if more than the maximum allowed
  * users are found.
- * 
+ *
  * In addition this function will also check whether the cookie
  * used had been re-used before, and then disconnect the old session
- * (cookies are unique). 
+ * (cookies are unique).
  */
 int check_multiple_users(main_server_st * s, struct proc_st *proc)
 {

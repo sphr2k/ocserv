@@ -236,12 +236,8 @@ static int plain_auth_init(void **ctx, void *pool, void *vctx,
 	int ret;
 
 	if (info->username == NULL || info->username[0] == 0) {
-<<<<<<< HEAD
 		syslog(LOG_NOTICE,
 		       "plain-auth: no username present");
-=======
-		syslog(LOG_AUTH, "plain-auth: no username present");
->>>>>>> Add SAML2 auth support, indent, update documentation
 		return ERR_AUTH_FAIL;
 	}
 
@@ -471,12 +467,7 @@ static void plain_group_list(void *pool, void *additional, char ***groupname,
 					    (&hash, hval, str_cmp,
 					     tgroup[i]) == NULL) {
 						if (strlen(tgroup[i]) > 1)
-<<<<<<< HEAD
 							(void)htable_add(&hash, hval, tgroup[i]);
-=======
-							htable_add(&hash, hval,
-								   tgroup[i]);
->>>>>>> Add SAML2 auth support, indent, update documentation
 					}
 				}
 			}

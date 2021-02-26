@@ -101,13 +101,8 @@ void remove_proc(main_server_st * s, struct proc_st *proc, unsigned flags)
 {
 	pid_t pid;
 
-<<<<<<< HEAD
 	ev_io_stop(main_loop, &proc->io);
 	ev_child_stop(main_loop, &proc->ev_child);
-=======
-	ev_io_stop(EV_A_ & proc->io);
-	ev_child_stop(EV_A_ & proc->ev_child);
->>>>>>> Add SAML2 auth support, indent, update documentation
 
 	list_del(&proc->list);
 	s->stats.active_clients--;
@@ -117,27 +112,14 @@ void remove_proc(main_server_st * s, struct proc_st *proc, unsigned flags)
 
 	/* close any pending sessions */
 	if (proc->active_sid && !(flags & RPROC_QUIT)) {
-<<<<<<< HEAD
 		if (session_close(&(s->sec_mod_instances[proc->sec_mod_instance_index]), proc) < 0) {
 			mslog(s, proc, LOG_ERR, "error closing session (communication with sec-mod issue)");
-=======
-		if (session_close(s, proc) < 0) {
-			mslog(s, proc, LOG_ERR,
-			      "error closing session (communication with sec-mod issue)");
->>>>>>> Add SAML2 auth support, indent, update documentation
 			exit(1);
 		}
 	}
 
-<<<<<<< HEAD
 	mslog(s, proc, discon_reason_to_log_level(proc->discon_reason), "user disconnected (reason: %s, rx: %"PRIu64", tx: %"PRIu64")",
 		discon_reason_to_str(proc->discon_reason), proc->bytes_in, proc->bytes_out);
-=======
-	mslog(s, proc, LOG_INFO,
-	      "user disconnected (reason: %s, rx: %" PRIu64 ", tx: %" PRIu64
-	      ")", discon_reason_to_str(proc->discon_reason), proc->bytes_in,
-	      proc->bytes_out);
->>>>>>> Add SAML2 auth support, indent, update documentation
 
 	pid = remove_from_script_list(s, proc);
 	if (proc->status == PS_AUTH_COMPLETED || pid > 0) {

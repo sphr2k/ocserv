@@ -238,10 +238,6 @@ int get_ca_der_handler(worker_st * ws, unsigned http_ver)
 	return ca_handler(ws, http_ver, 1);
 }
 
-<<<<<<< HEAD
-#ifdef ANYCONNECT_CLIENT_COMPAT
-int get_config_handler(worker_st *ws, unsigned http_ver)
-=======
 int get_saml_metadata_handler(worker_st * ws, unsigned http_ver)
 {
 	int ret;
@@ -275,7 +271,6 @@ int get_saml_metadata_handler(worker_st * ws, unsigned http_ver)
 }
 
 int get_config_handler(worker_st * ws, unsigned http_ver)
->>>>>>> Add SAML2 auth support, indent, update documentation
 {
 	int ret;
 	struct stat st;

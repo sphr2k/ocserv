@@ -152,15 +152,8 @@ int post_kkdcp_handler(worker_st * ws, unsigned http_ver)
 		return -1;
 	}
 
-<<<<<<< HEAD
 	ws_add_score_to_ip(ws, WSCONFIG(ws)->ban_points_kkdcp, 0, 0);
 	oclog(ws, LOG_HTTP_DEBUG, "HTTP processing kkdcp framed request: %u bytes", (unsigned)req->body_length);
-=======
-	ws_add_score_to_ip(ws, WSCONFIG(ws)->ban_points_kkdcp, 0);
-	oclog(ws, LOG_HTTP_DEBUG,
-	      "HTTP processing kkdcp framed request: %u bytes",
-	      (unsigned)req->body_length);
->>>>>>> Add SAML2 auth support, indent, update documentation
 
 	length = BUF_SIZE;
 	buf = talloc_size(ws, length);
@@ -318,13 +311,9 @@ int post_kkdcp_handler(worker_st * ws, unsigned http_ver)
 	ret = 0;
 	goto cleanup;
  fail:
-<<<<<<< HEAD
 	(void)cstp_printf(ws,
 			 "HTTP/1.%u 502 %s\r\n\r\n",
 			 http_ver, reason);
-=======
-	cstp_printf(ws, "HTTP/1.%u 502 %s\r\n\r\n", http_ver, reason);
->>>>>>> Add SAML2 auth support, indent, update documentation
 	ret = -1;
 
  cleanup:
